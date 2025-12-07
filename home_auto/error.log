@@ -1,0 +1,4 @@
+15:12:28 | ERROR | EMPTY INPUT RECEIVED | input=
+16:13:17 | ERROR | NULL / EMPTY PREDICTION | input=hello | output=null
+16:13:46 | ERROR | NULL / EMPTY PREDICTION | input=it is hard | output=null
+17:04:01 | ERROR | NULL / EMPTY PREDICTION | input=hello | output=null
