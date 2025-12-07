@@ -41,7 +41,6 @@ print("Loaded", len(dataset_sentences), "valid training samples.")
 # Create embeddings for dataset
 dataset_embeddings = model.encode(dataset_sentences, convert_to_tensor=True)
 
-
 def detect_intents(user_text, threshold=0.45):
 
     if len(dataset_embeddings) == 0:
