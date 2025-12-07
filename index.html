@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZeNoVa - Voice Assistant</title>
+    <meta name="description" content="Voice-controlled home automation assistant">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <div>
+            <button id="mainButton" class="main-button idle">
+                <div class="button-inner">
+                    <div class="play-icon"></div>
+                </div>
+            </button>
+        </div>
+
+        <div id="currentTextContainer" class="current-text" style="display: none;">
+            <div class="current-text-box">
+                <p id="currentTextContent" class="current-text-content"></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
