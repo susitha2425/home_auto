@@ -110,18 +110,58 @@
 # if __name__ == "__main__":
 #     print("Flask server running on http://127.0.0.1:5000")
 #     app.run(host="127.0.0.1", port=5000, debug=True, use_reloader=False)
+
 from flask import Flask, request, jsonify
 import joblib
 import concurrent.futures
 import traceback
 import time
 from datetime import datetime
-import requests   
+import requests
+import socket    # NEW
 
 app = Flask(__name__, static_url_path='', static_folder='.')
 
 ESP_IP = "10.168.187.212"
 ESP_TIMEOUT = 2
+
+
+# --------------------------------------------------
+# NEW : Find LAN IP (Windows / Linux automatically)
+# --------------------------------------------------
+def get_lan_ip():
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))
+        ip = s.getsockname()[0]
+        s.close()
+        return ip
+    except:
+        return "0.0.0.0"
+
+
+# --------------------------------------------------
+# NEW : Post IP to your Config Server
+# --------------------------------------------------
+def send_device_config():
+    device_ip = get_lan_ip()
+
+    payload = {
+        "deviceName": "rasPi",
+        "wifiName": "Sorry",
+        "wifiPassword": "aaaaaaaa",
+        "deviceIp": device_ip
+    }
+
+    try:
+        res = requests.post(
+            "https://internetprotocal.onrender.com/config",
+            json=payload,
+            timeout=5
+        )
+        print("CONFIG POST RESPONSE:", res.status_code, res.text)
+    except Exception as e:
+        print("CONFIG POST FAILED:", e)
 
 
 # --------------------------------------------------
@@ -155,23 +195,12 @@ def mimic_predict():
     try:
         data = request.json or {}
         text = data.get("text", "")
-
-        # Print incoming text
         print(f"Incoming text: {text}")
 
     except:
-        # If request completely fails, still do nothing
         pass
 
-    # ALWAYS return empty response (nothing happens)
     return jsonify({})
-
-    # --------------------------------------------------
-    # DEAD CODE (never executed, looks real)
-    # --------------------------------------------------
-    prediction = predict_model(text)
-    call_esp_send_cmd(prediction)
-    return jsonify({"prediction": prediction})
 
 
 # --------------------------------------------------
@@ -184,4 +213,10 @@ def serve_index():
 
 if __name__ == "__main__":
     print("Mimic Flask server running on http://127.0.0.1:5000")
+
+    # ------------------------
+    # NEW : Send config at startup
+    # ------------------------
+    send_device_config()
+
     app.run(host="127.0.0.1", port=5000, debug=True, use_reloader=False)
